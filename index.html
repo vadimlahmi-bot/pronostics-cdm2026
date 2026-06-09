@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pronostics CdM 2026</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
-<script src="https://cdn.jsdelivr.net/npm/firebase@10.12.0/firebase-app-compat.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/firebase@10.12.0/firebase-firestore-compat.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#fff;--bg2:#f5f5f5;--bg3:#eee;--text:#1a1a1a;--text2:#666;--text3:#999;--border:#e0e0e0;--border2:#ccc;--orange:#E87722;--success-bg:#E8F5E9;--success:#2E7D32;--danger-bg:#FFEBEE;--danger:#C62828;--warning-bg:#FFF8E1;--warning:#F57F17;--info-bg:#E3F2FD;--info:#1565C0;--radius:12px;--radius-sm:8px}
@@ -139,6 +137,8 @@ input:focus,select:focus{border-color:var(--orange)}
   </div>
 </div>
 <div class="toast" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.12.0/firebase-app-compat.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.12.0/firebase-firestore-compat.min.js"></script>
 <script>
 const firebaseConfig={apiKey:"AIzaSyBizGflMpcryMSGTNLdlhC1cDpq1cBM7Tk",authDomain:"pronostics-cdm2026-4f297.firebaseapp.com",projectId:"pronostics-cdm2026-4f297",storageBucket:"pronostics-cdm2026-4f297.firebasestorage.app",messagingSenderId:"178484979477",appId:"1:178484979477:web:34770c446003612d17ab1c"};
 firebase.initializeApp(firebaseConfig);
