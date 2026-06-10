@@ -685,41 +685,15 @@ async function analyseScreenshot(input) {
     
     const mediaType = file.type || 'image/jpeg';
     
-    // Call Claude API
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    // Call via Netlify proxy (avoids CORS)
+    const response = await fetch('/.netlify/functions/analyse', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 500,
-        messages: [{
-          role: 'user',
-          content: [
-            {
-              type: 'image',
-              source: {type: 'base64', media_type: mediaType, data: b64}
-            },
-            {
-              type: 'text',
-              text: `Analyse ce ticket de paris sportifs Winamax et extrait les informations suivantes en JSON uniquement, sans aucun texte avant ou après :
-{
-  "description": "description compacte du pari (ex: Portugal + Mexique + Allemagne/+1.5buts/Havertz buteur)",
-  "cote": 2.54,
-  "mise": 1.00
-}
-Règles :
-- description : liste les sélections séparées par " + ", pour les combinés MyMatch groupe les sélections du même match avec "/"
-- cote : la cote totale (nombre décimal)
-- mise : le montant misé en euros (nombre décimal, ignorer le ComboBooster)
-Réponds UNIQUEMENT avec le JSON, rien d'autre.`
-            }
-          ]
-        }]
-      })
+      body: JSON.stringify({image: b64, mediaType})
     });
-    
     const data = await response.json();
-    const text = data.content?.[0]?.text || '';
+    if (data.error) throw new Error(data.error);
+    const text = data.result || '';
     
     // Parse JSON
     let parsed;
