@@ -4,7 +4,11 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { image, mediaType } = JSON.parse(event.body);
+    const { image, mediaType: rawMediaType } = JSON.parse(event.body);
+
+    // Normalize media type - Claude only accepts jpeg, png, gif, webp
+    const allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    const mediaType = allowed.includes(rawMediaType) ? rawMediaType : 'image/jpeg';
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
