@@ -33,39 +33,18 @@ exports.handler = async (event) => {
     });
 
     const raw = await response.text();
-    
-    // Try to parse as JSON
     let apiData;
-    try {
-      apiData = JSON.parse(raw);
-    } catch(e) {
-      return {
-        statusCode: 200,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: 'API parse error: ' + raw.substring(0, 200) })
-      };
-    }
+    try { apiData = JSON.parse(raw); }
+    catch(e) { return { statusCode: 200, headers: {'Content-Type':'application/json'}, body: JSON.stringify({ error: 'Erreur API: ' + raw.substring(0, 200) }) }; }
 
-    // Check for API errors
     if (apiData.error) {
-      return {
-        statusCode: 200,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: 'API error: ' + apiData.error.message })
-      };
+      return { statusCode: 200, headers: {'Content-Type':'application/json'}, body: JSON.stringify({ error: apiData.error.message }) };
     }
 
     const text = apiData.content?.[0]?.text || '';
+    return { statusCode: 200, headers: {'Content-Type':'application/json'}, body: JSON.stringify({ result: text }) };
 
-    return {
-      statusCode: 200,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ result: text, debug: raw.substring(0, 100) })
-    };
   } catch (e) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: e.message })
-    };
+    return { statusCode: 500, body: JSON.stringify({ error: e.message }) };
   }
 };
