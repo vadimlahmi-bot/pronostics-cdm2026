@@ -168,7 +168,7 @@ input:focus,select:focus{border-color:var(--orange)}
       <button class="btn btn-secondary" onclick="document.getElementById('winaUpload').click()" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:0">
         <i class="ti ti-upload"></i> Importer un screenshot
       </button>
-      <input type="file" id="winaUpload" accept="image/*,capture=camera" capture="environment" style="display:none" onchange="analyseScreenshot(this)"/>
+      <input type="file" id="winaUpload" accept="image/*" style="display:none" onchange="analyseScreenshot(this)"/>
       <div id="wina-loading" style="display:none;text-align:center;padding:16px;color:var(--text2)">
         <div class="spinner"></div><br>Analyse en cours...
       </div>
