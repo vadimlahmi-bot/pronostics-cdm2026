@@ -675,15 +675,29 @@ async function analyseScreenshot(input) {
   loading.style.display = 'block';
   
   try {
-    // Convert to base64
+    // Convert to base64 - robust for Safari iOS and HEIC
+    const mediaType = (file.type && file.type !== '') ? file.type : 'image/jpeg';
     const b64 = await new Promise((res, rej) => {
       const r = new FileReader();
-      r.onload = () => res(r.result.split(',')[1]);
-      r.onerror = rej;
+      r.onload = () => {
+        try {
+          const result = r.result;
+          if (typeof result === 'string') {
+            // DataURL format: data:image/jpeg;base64,XXX
+            const parts = result.split(',');
+            res(parts.length > 1 ? parts[1] : parts[0]);
+          } else {
+            // ArrayBuffer fallback
+            const bytes = new Uint8Array(result);
+            let binary = '';
+            for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+            res(btoa(binary));
+          }
+        } catch(e) { rej(e); }
+      };
+      r.onerror = (e) => rej(new Error('Lecture fichier impossible'));
       r.readAsDataURL(file);
     });
-    
-    const mediaType = file.type || 'image/jpeg';
     
     // Call via Netlify proxy (avoids CORS)
     const response = await fetch('/.netlify/functions/analyse', {
