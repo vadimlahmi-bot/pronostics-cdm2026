@@ -165,10 +165,10 @@ input:focus,select:focus{border-color:var(--orange)}
     <!-- Screenshot Winamax -->
     <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
       <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em">&#128247; Import Winamax</div>
-      <label for="winaUpload" class="btn btn-secondary" style="display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;margin-top:0">
+      <button class="btn btn-secondary" onclick="document.getElementById('winaUpload').click()" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:0">
         <i class="ti ti-upload"></i> Importer un screenshot
-      </label>
-      <input type="file" id="winaUpload" accept="image/*" style="display:none" onchange="analyseScreenshot(this)"/>
+      </button>
+      <input type="file" id="winaUpload" accept="image/*,capture=camera" capture="environment" style="display:none" onchange="analyseScreenshot(this)"/>
       <div id="wina-loading" style="display:none;text-align:center;padding:16px;color:var(--text2)">
         <div class="spinner"></div><br>Analyse en cours...
       </div>
