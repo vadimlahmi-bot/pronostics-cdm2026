@@ -693,14 +693,18 @@ async function analyseScreenshot(input) {
     });
     const data = await response.json();
     if (data.error) throw new Error(data.error);
-    const text = data.result || '';
+    const text = (data.result || '').trim();
+    if (!text) throw new Error('Réponse vide de Claude');
     
-    // Parse JSON
+    // Parse JSON - robustly extract from any surrounding text
     let parsed;
     try {
-      parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+      // Try to extract JSON object from the text
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) throw new Error('Pas de JSON trouvé');
+      parsed = JSON.parse(jsonMatch[0]);
     } catch(e) {
-      throw new Error('Impossible de lire la réponse : ' + text.substring(0, 100));
+      throw new Error('Impossible de lire la réponse : ' + text.substring(0, 150));
     }
     
     // Pre-fill the form
