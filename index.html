@@ -14,7 +14,8 @@
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg2);color:var(--text);font-size:15px;min-height:100vh}
 .app{max-width:480px;margin:0 auto;background:var(--bg);min-height:100vh;display:flex;flex-direction:column}
 .header{background:var(--orange);color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
-.header-sub{font-size:12px;opacity:.85}
+.header-sub{font-size:12px;opacity:.85;display:flex;align-items:center;gap:8px}
+.admin-badge{background:rgba(255,255,255,.25);font-size:10px;padding:2px 7px;border-radius:20px;font-weight:600}
 .sync-indicator{width:8px;height:8px;border-radius:50%;background:#fff;opacity:.5}
 .sync-indicator.live{opacity:1;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
@@ -42,10 +43,14 @@ input:focus,select:focus{border-color:var(--orange)}
 .hint{font-size:11px;color:var(--text3);margin-top:4px}
 .warn{font-size:12px;color:var(--danger);margin-top:6px;display:none}
 .btn{width:100%;padding:12px;font-size:15px;font-weight:600;cursor:pointer;border-radius:var(--radius-sm);font-family:inherit;margin-top:14px}
-.btn-primary{background:var(--orange);color:#fff;border:none}.btn-secondary{background:none;border:1px solid var(--border2);color:var(--text)}
+.btn-primary{background:var(--orange);color:#fff;border:none}
+.btn-secondary{background:none;border:1px solid var(--border2);color:var(--text)}
+.btn-danger{background:var(--danger-bg);color:var(--danger);border:.5px solid #EF9A9A}
 .btn-sm{padding:7px;font-size:13px;font-weight:500;cursor:pointer;border-radius:var(--radius-sm);font-family:inherit;flex:1}
 .btn-win{background:var(--success-bg);color:var(--success);border:.5px solid #A5D6A7}
 .btn-lose{background:var(--danger-bg);color:var(--danger);border:.5px solid #EF9A9A}
+.btn-edit{background:var(--info-bg);color:var(--info);border:.5px solid #90CAF9}
+.btn-del{background:var(--danger-bg);color:var(--danger);border:.5px solid #EF9A9A}
 .pari-card{background:var(--bg);border:.5px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:8px}
 .pari-top{display:flex;justify-content:space-between;align-items:center}
 .pari-player{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
@@ -60,28 +65,59 @@ input:focus,select:focus{border-color:var(--orange)}
 .hist-detail{font-size:12px;color:var(--text2);margin-top:2px}.hist-right{text-align:right;flex-shrink:0;margin-left:10px}
 .hist-delta{font-size:12px;font-weight:600;margin-top:3px}.empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:14px}
 .sanction-section{margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.admin-section{margin-top:20px;padding-top:16px;border-top:2px solid var(--orange)}
+.admin-section-title{font-size:13px;font-weight:600;color:var(--orange);margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:6px}
 .loading{text-align:center;padding:40px;color:var(--text2)}
 .spinner{display:inline-block;width:24px;height:24px;border:3px solid var(--border2);border-top-color:var(--orange);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:10px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center;padding:20px}
-.modal-overlay.open{display:flex}.modal{background:var(--bg);border-radius:var(--radius);padding:20px;width:100%;max-width:340px}
-.modal-title{font-size:17px;font-weight:700;margin-bottom:10px}.modal-body{font-size:14px;color:var(--text2);line-height:1.6}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg);border-radius:var(--radius);padding:20px;width:100%;max-width:340px}
+.modal-title{font-size:17px;font-weight:700;margin-bottom:10px}
+.modal-body{font-size:14px;color:var(--text2);line-height:1.6}
 .modal-box{background:var(--bg2);border-radius:var(--radius-sm);padding:12px;margin-top:10px;font-size:13px}
 .modal-box div{margin-bottom:6px}
+.modal-actions{display:flex;gap:8px;margin-top:14px}
+.modal-actions .btn{margin-top:0}
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 20px;border-radius:var(--radius);font-size:13px;display:none;z-index:200;white-space:nowrap}
 .cote-info{font-size:11px;color:var(--info);background:var(--info-bg);border-radius:4px;padding:4px 8px;margin-top:4px;display:none}
 .checkbox-row{display:flex;align-items:center;gap:8px;margin-top:12px}
 .checkbox-row input{width:auto}.checkbox-row label{font-size:14px;color:var(--text);cursor:pointer}
+.identity-screen{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px}
+.identity-card{width:100%;max-width:340px}
+.identity-title{font-size:22px;font-weight:700;margin-bottom:8px}
+.identity-sub{font-size:14px;color:var(--text2);margin-bottom:24px}
+.player-choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.player-choice{padding:16px 12px;border:1.5px solid var(--border2);border-radius:var(--radius);cursor:pointer;text-align:center;background:var(--bg)}
+.player-choice:hover,.player-choice.selected{border-color:var(--orange);background:var(--warning-bg)}
+.player-choice .av{margin:0 auto 8px;width:40px;height:40px;font-size:16px}
+.player-choice .name{font-size:14px;font-weight:600}
 </style>
 </head>
 <body>
-<div class="app">
+
+<!-- Identity screen -->
+<div class="identity-screen" id="identityScreen">
+  <div class="identity-card">
+    <div style="font-size:32px;margin-bottom:12px">⚽</div>
+    <div class="identity-title">Pronostics CdM 2026</div>
+    <div class="identity-sub">Qui es-tu ?</div>
+    <div class="player-choices" id="playerChoices"></div>
+  </div>
+</div>
+
+<div class="app" style="display:none" id="mainApp">
 <div class="header">
   <div>
-    <div style="font-size:17px;font-weight:600">&#x26BD; Pronostics CdM 2026</div>
-    <div class="header-sub">Vadim &middot; Erwin &middot; Simon &middot; David</div>
+    <div style="font-size:17px;font-weight:600">⚽ Pronostics CdM 2026</div>
+    <div class="header-sub">
+      <span id="headerName">—</span>
+      <span class="admin-badge" id="adminBadge" style="display:none">ADMIN</span>
+    </div>
   </div>
-  <div class="sync-indicator" id="syncDot"></div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div class="sync-indicator" id="syncDot"></div>
+  </div>
 </div>
 <div class="tabs">
   <button class="tab active" onclick="switchTab('dashboard')"><i class="ti ti-layout-dashboard"></i>Tableau</button>
@@ -90,55 +126,534 @@ input:focus,select:focus{border-color:var(--orange)}
   <button class="tab" onclick="switchTab('historique')"><i class="ti ti-history"></i>Historique</button>
 </div>
 <div class="content">
+
   <div id="tab-dashboard" class="section active">
     <div id="loadingDash" class="loading"><div class="spinner"></div><br>Chargement...</div>
     <div id="playerCards" class="player-grid" style="display:none"></div>
     <div id="pendingBanner"></div>
   </div>
+
   <div id="tab-paris" class="section"><div id="parisList"></div></div>
+
   <div id="tab-saisir" class="section">
     <label class="label">Joueur</label>
     <select id="s-player" onchange="onPlayerChange()"></select>
     <div id="s-alreadybet" style="font-size:12px;color:var(--warning);background:var(--warning-bg);border-radius:var(--radius-sm);padding:8px 10px;margin-top:8px;display:none"></div>
     <label class="label">Description</label>
-    <input type="text" id="s-desc" placeholder="ex: France gagne"/>
+    <input type="text" id="s-desc" placeholder="ex: France gagne + Mbappé buteur"/>
     <label class="label">Cote</label>
     <input type="number" id="s-cote" placeholder="ex: 2.50" step="0.01" min="1.01" oninput="updateCoteInfo()"/>
     <div class="cote-info" id="s-coteinfo"></div>
     <div id="s-mise-group">
-      <label class="label">Mise (&#8364;)</label>
+      <label class="label">Mise (€)</label>
       <input type="number" id="s-mise" placeholder="ex: 15" step="1" min="1"/>
       <div class="hint" id="s-miseinfo"></div>
     </div>
     <div class="checkbox-row">
       <input type="checkbox" id="s-sanction" onchange="onSanctionChange()"/>
-      <label for="s-sanction">Ticket de sanction (5&#8364; fixe)</label>
+      <label for="s-sanction">Ticket de sanction (5€ fixe)</label>
     </div>
     <div id="s-sanctionner-group" style="display:none">
-      <label class="label">Gains vers&#233;s &#224;</label>
+      <label class="label">Gains versés à</label>
       <select id="s-sanctionner"></select>
     </div>
     <div class="warn" id="s-warning"></div>
-    <button class="btn btn-primary" onclick="declarerPari()">D&#233;clarer le pari</button>
-    <div class="sanction-section">
-      <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em">Signaler un oubli</div>
-      <label class="label" style="margin-top:0">Joueur fautif</label>
+    <button class="btn btn-primary" id="submitBtn" onclick="declarerPari()">Déclarer le pari</button>
+    <button class="btn btn-secondary" id="cancelEditBtn" onclick="cancelEdit()" style="display:none">Annuler la modification</button>
+
+    <!-- Admin section -->
+    <div class="admin-section" id="adminSection" style="display:none">
+      <div class="admin-section-title"><i class="ti ti-shield"></i> Zone Admin</div>
+      <label class="label" style="margin-top:0">Signaler un oubli</label>
       <select id="s-oubli"></select>
-      <button class="btn btn-secondary" onclick="signalerOubli()" style="margin-top:10px">Signaler l'oubli</button>
+      <button class="btn btn-secondary" onclick="signalerOubli()" style="margin-top:10px">Signaler l'oubli &amp; tirer au sort</button>
+    </div>
+
+    <!-- PIN admin login -->
+    <div class="sanction-section" id="pinSection">
+      <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em">Accès admin</div>
+      <input type="password" id="pinInput" placeholder="Code PIN admin" style="margin-bottom:8px"/>
+      <button class="btn btn-secondary" onclick="tryPin()" style="margin-top:0">Connexion admin</button>
+      <div class="warn" id="pinWarn"></div>
     </div>
   </div>
+
   <div id="tab-historique" class="section"><div id="historiqueList"></div></div>
 </div>
 </div>
+
+<!-- Generic modal -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
     <div class="modal-title" id="modal-title"></div>
     <div class="modal-body" id="modal-body"></div>
     <div class="modal-box" id="modal-box" style="display:none"></div>
-    <button class="btn btn-primary" onclick="closeModal()" style="margin-top:14px">OK</button>
+    <div class="modal-actions" id="modal-actions">
+      <button class="btn btn-primary" onclick="closeModal()">OK</button>
+    </div>
   </div>
 </div>
+
 <div class="toast" id="toast"></div>
-<script src="app.js"></script>
+
+<script>
+const ADMIN_PIN = '2026';
+const ADMIN_PLAYERS = ['vadim', 'simon'];
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBizGflMpcryMSGTNLdlhC1cDpq1cBM7Tk",
+  authDomain: "pronostics-cdm2026-4f297.firebaseapp.com",
+  projectId: "pronostics-cdm2026-4f297",
+  storageBucket: "pronostics-cdm2026-4f297.firebasestorage.app",
+  messagingSenderId: "178484979477",
+  appId: "1:178484979477:web:34770c446003612d17ab1c"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+const PL = [
+  {id:'vadim',name:'Vadim',av:'V',ac:'av-v'},
+  {id:'erwin',name:'Erwin',av:'E',ac:'av-e'},
+  {id:'simon',name:'Simon',av:'S',ac:'av-s'},
+  {id:'david',name:'David',av:'D',ac:'av-d'}
+];
+
+let S = {bankrolls:{vadim:50,erwin:50,simon:50,david:50}, oublis:{vadim:0,erwin:0,simon:0,david:0}};
+let paris = [];
+let currentPlayer = null;
+let isAdmin = false;
+let editingPariId = null;
+
+const TD = () => new Date().toISOString().slice(0,10);
+const mm = br => br <= 0 ? 0 : Math.ceil(br * .2);
+const gp = id => PL.find(p => p.id === id);
+const eli = id => S.bankrolls[id] <= 0;
+const tb = pid => paris.filter(p => p.playerId === pid && p.date === TD());
+const hn = pid => tb(pid).some(p => !p.isSanction && p.status === 'pending' && p.id !== editingPariId);
+const hs = pid => tb(pid).some(p => p.isSanction && p.status === 'pending');
+
+const sR = db.collection('game').doc('state');
+const pR = db.collection('paris');
+
+// ── Identity screen ──
+function initIdentity() {
+  const saved = localStorage.getItem('cdm_player');
+  if (saved && PL.find(p => p.id === saved)) {
+    setPlayer(saved);
+    return;
+  }
+  const grid = document.getElementById('playerChoices');
+  let h = '';
+  PL.forEach(p => {
+    h += `<div class="player-choice" onclick="setPlayer('${p.id}')">
+      <div class="av ${p.ac}">${p.av}</div>
+      <div class="name">${p.name}</div>
+    </div>`;
+  });
+  grid.innerHTML = h;
+}
+
+function setPlayer(id) {
+  currentPlayer = id;
+  localStorage.setItem('cdm_player', id);
+  isAdmin = false;
+  document.getElementById('identityScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display = 'flex';
+  document.getElementById('headerName').textContent = gp(id).name;
+  document.getElementById('adminBadge').style.display = 'none';
+  document.getElementById('adminSection').style.display = 'none';
+  document.getElementById('pinSection').style.display = 'block';
+  initFirebase();
+}
+
+// ── Admin ──
+function tryPin() {
+  const pin = document.getElementById('pinInput').value.trim();
+  const w = document.getElementById('pinWarn');
+  if (pin !== ADMIN_PIN) {
+    w.style.display = 'block'; w.textContent = 'Code incorrect.'; return;
+  }
+  if (!ADMIN_PLAYERS.includes(currentPlayer)) {
+    w.style.display = 'block'; w.textContent = 'Accès réservé à Vadim et Simon.'; return;
+  }
+  isAdmin = true;
+  w.style.display = 'none';
+  document.getElementById('adminBadge').style.display = 'inline-block';
+  document.getElementById('adminSection').style.display = 'block';
+  document.getElementById('pinSection').style.display = 'none';
+  document.getElementById('pinInput').value = '';
+  ps();
+  toast('Mode admin activé ✓');
+}
+
+// ── Firebase ──
+async function initFirebase() {
+  const snap = await sR.get();
+  if (!snap.exists) await sR.set(S);
+}
+
+sR.onSnapshot(snap => {
+  if (snap.exists) {
+    S = snap.data();
+    document.getElementById('syncDot').classList.add('live');
+    ra();
+  }
+});
+
+pR.orderBy('createdAt', 'asc').onSnapshot(snap => {
+  paris = snap.docs.map(d => ({id: d.id, ...d.data()}));
+  ra();
+  document.getElementById('loadingDash').style.display = 'none';
+  document.getElementById('playerCards').style.display = 'grid';
+});
+
+// ── Render ──
+function ra() { rd(); rp(); rh(); ps(); }
+
+function rd() {
+  const sorted = [...PL].sort((a,b) => S.bankrolls[b.id] - S.bankrolls[a.id]);
+  let h = '';
+  sorted.forEach(p => {
+    const br = S.bankrolls[p.id], m = mm(br), el = eli(p.id);
+    const pct = Math.min(100, Math.max(0, (br/100)*100));
+    const bc = el ? '#E24B4A' : br >= 50 ? '#1D9E75' : '#EF9F27';
+    const o = S.oublis[p.id];
+    const isCurrent = p.id === currentPlayer;
+    h += `<div class="pcard" style="${isCurrent ? 'border-color:var(--orange);' : ''}">
+      <div class="pcard-head">
+        <div class="av ${p.ac}">${p.av}</div>
+        <div>
+          <div class="pname">${p.name}${o > 0 ? `<span class="oubli-badge">×${o}</span>` : ''}${hn(p.id) ? '<span class="dot-today"></span>' : ''}</div>
+          <div class="pstatus">${el ? 'Éliminé' : hn(p.id) ? 'A parié' : 'En attente'}</div>
+        </div>
+      </div>
+      <div class="br-row"><span class="br-label">Bankroll</span><span class="br-val">${br.toFixed(2)}€</span></div>
+      <div class="br-row"><span class="br-label">Mise min.</span><span class="mise-pill">${el ? '—' : m + '€'}</span></div>
+      <div class="bar-bg"><div class="bar-fg" style="width:${pct}%;background:${bc}"></div></div>
+    </div>`;
+  });
+  document.getElementById('playerCards').innerHTML = h;
+  const pend = paris.filter(p => p.status === 'pending');
+  document.getElementById('pendingBanner').innerHTML = pend.length
+    ? `<div class="info-banner">${pend.length} pari(s) en attente → onglet <strong>Paris</strong></div>` : '';
+}
+
+function rp() {
+  const pend = paris.filter(p => p.status === 'pending');
+  if (!pend.length) { document.getElementById('parisList').innerHTML = '<div class="empty">Aucun pari en attente</div>'; return; }
+  let h = '';
+  pend.forEach(p => {
+    const pl = gp(p.playerId), gn = (p.mise * (p.cote - 1)).toFixed(2);
+    const isOwn = p.playerId === currentPlayer && !p.isSanction;
+    const sanctionBadge = p.isSanction ? '<span class="chip chip-sanction">sanction</span>' : '';
+    const sanctionInfo = p.isSanction && p.sanctionnerId
+      ? `<div class="pari-sanction-info">Si gagné → ${gp(p.sanctionnerId).name} encaisse +${gn}€ · ${pl.name} récupère 5€</div>` : '';
+
+    // Action buttons
+    let actions = '';
+    if (isAdmin) {
+      // Admin: result + delete (match annulé)
+      actions = `<button class="btn-sm btn-win" onclick="resolverPari('${p.id}','won')">✓ Gagné</button>
+        <button class="btn-sm btn-lose" onclick="resolverPari('${p.id}','lost')">✗ Perdu</button>
+        <button class="btn-sm btn-del" onclick="supprimerPariAdmin('${p.id}')" title="Match annulé">🚫</button>`;
+    } else if (isOwn) {
+      // Own: edit + result buttons
+      actions = `<button class="btn-sm btn-edit" onclick="editPari('${p.id}')">✏️ Modifier</button>
+        <button class="btn-sm btn-win" onclick="resolverPari('${p.id}','won')">✓ Gagné</button>
+        <button class="btn-sm btn-lose" onclick="resolverPari('${p.id}','lost')">✗ Perdu</button>`;
+    } else {
+      actions = `<button class="btn-sm btn-win" onclick="resolverPari('${p.id}','won')">✓ Gagné</button>
+        <button class="btn-sm btn-lose" onclick="resolverPari('${p.id}','lost')">✗ Perdu</button>`;
+    }
+
+    h += `<div class="pari-card">
+      <div class="pari-top">
+        <div class="pari-player">
+          <div class="av ${pl.ac}" style="width:22px;height:22px;font-size:10px">${pl.av}</div>
+          ${pl.name} ${sanctionBadge}
+        </div>
+        <span class="pari-cote">${p.mise}€ @ ${p.cote}</span>
+      </div>
+      <div class="pari-desc">${p.desc}</div>
+      <div class="pari-gain">Gain net : +${gn}€</div>
+      ${sanctionInfo}
+      <div class="pari-actions">${actions}</div>
+    </div>`;
+  });
+  document.getElementById('parisList').innerHTML = h;
+}
+
+function rh() {
+  const done = paris.filter(p => p.status !== 'pending').reverse();
+  if (!done.length) { document.getElementById('historiqueList').innerHTML = '<div class="empty">Aucun résultat encore</div>'; return; }
+  let h = '';
+  done.forEach(p => {
+    const pl = gp(p.playerId), gn = (p.mise * (p.cote - 1)).toFixed(2);
+    let d = '', ex = '';
+    if (p.isSanction) {
+      if (p.status === 'won') { d = 'Mise récupérée'; ex = `<div class="hist-delta" style="color:var(--success);font-size:11px">${(gp(p.sanctionnerId)||{}).name} +${gn}€</div>`; }
+      else if (p.status === 'cancelled') { d = 'Annulé'; }
+      else d = '-5€';
+    } else {
+      if (p.status === 'cancelled') d = 'Annulé (remboursé)';
+      else d = p.status === 'won' ? '+' + gn + '€' : '-' + p.mise + '€';
+    }
+    const chipClass = p.status === 'won' ? 'chip-won' : p.status === 'cancelled' ? '' : 'chip-lost';
+    const chipLabel = p.status === 'won' ? 'Gagné' : p.status === 'cancelled' ? '🚫 Annulé' : 'Perdu';
+    const deltaColor = p.status === 'won' ? 'var(--success)' : p.status === 'cancelled' ? 'var(--text2)' : 'var(--danger)';
+    h += `<div class="hist-row">
+      <div class="hist-left">
+        <div class="hist-name">${pl.name}${p.isSanction ? ' <span class="chip chip-sanction">sanction</span>' : ''}</div>
+        <div class="hist-detail">${p.desc} · ${p.mise}€ @ ${p.cote}</div>
+      </div>
+      <div class="hist-right">
+        <span class="chip ${chipClass}">${chipLabel}</span>
+        <div class="hist-delta" style="color:${deltaColor}">${d}</div>
+        ${ex}
+      </div>
+    </div>`;
+  });
+  document.getElementById('historiqueList').innerHTML = h;
+}
+
+function ps() {
+  ['s-player', 's-oubli'].forEach(sid => {
+    const sel = document.getElementById(sid), cur = sel.value;
+    sel.innerHTML = '';
+    PL.forEach(p => {
+      if (!eli(p.id)) {
+        const o = document.createElement('option');
+        o.value = p.id; o.textContent = p.name;
+        sel.appendChild(o);
+      }
+    });
+    if (cur) sel.value = cur;
+    else if (currentPlayer) sel.value = currentPlayer;
+  });
+  umi();
+}
+
+function umi() {
+  const pid = document.getElementById('s-player').value;
+  if (!pid) return;
+  const br = S.bankrolls[pid];
+  document.getElementById('s-miseinfo').textContent = `BR : ${br.toFixed(2)}€ — mise min : ${mm(br)}€`;
+  const is = document.getElementById('s-sanction').checked, ab = document.getElementById('s-alreadybet');
+  if (hn(pid) && !is) { ab.style.display = 'block'; ab.textContent = gp(pid).name + ' a déjà son ticket du jour.'; }
+  else ab.style.display = 'none';
+}
+
+function onPlayerChange() { umi(); updateCoteInfo(); const pid = document.getElementById('s-player').value; if (document.getElementById('s-sanction').checked) pSn(pid); }
+
+function onSanctionChange() {
+  const is = document.getElementById('s-sanction').checked;
+  document.getElementById('s-sanctionner-group').style.display = is ? 'block' : 'none';
+  document.getElementById('s-mise-group').style.opacity = is ? '0.4' : '1';
+  const pid = document.getElementById('s-player').value;
+  if (is && pid) pSn(pid);
+  umi(); updateCoteInfo();
+}
+
+function updateCoteInfo() {
+  const is = document.getElementById('s-sanction').checked, cote = parseFloat(document.getElementById('s-cote').value), info = document.getElementById('s-coteinfo');
+  if (!is || isNaN(cote) || cote <= 1) { info.style.display = 'none'; return; }
+  info.style.display = 'block'; info.textContent = `Si gagné → gain net transféré : ${(5 * (cote - 1)).toFixed(2)}€`;
+}
+
+function pSn(excl) {
+  const sel = document.getElementById('s-sanctionner'); sel.innerHTML = '';
+  PL.forEach(p => { if (p.id !== excl && !eli(p.id)) { const o = document.createElement('option'); o.value = p.id; o.textContent = p.name; sel.appendChild(o); } });
+}
+
+// ── Edit pari ──
+function editPari(id) {
+  const p = paris.find(x => x.id === id);
+  if (!p || p.playerId !== currentPlayer) return;
+  editingPariId = id;
+  switchTab('saisir');
+  document.getElementById('s-player').value = p.playerId;
+  document.getElementById('s-desc').value = p.desc;
+  document.getElementById('s-cote').value = p.cote;
+  document.getElementById('s-mise').value = p.mise;
+  document.getElementById('s-sanction').checked = false;
+  document.getElementById('s-sanctionner-group').style.display = 'none';
+  document.getElementById('s-mise-group').style.opacity = '1';
+  document.getElementById('submitBtn').textContent = 'Enregistrer la modification';
+  document.getElementById('cancelEditBtn').style.display = 'block';
+  document.getElementById('s-alreadybet').style.display = 'none';
+  umi();
+}
+
+function cancelEdit() {
+  editingPariId = null;
+  document.getElementById('submitBtn').textContent = 'Déclarer le pari';
+  document.getElementById('cancelEditBtn').style.display = 'none';
+  document.getElementById('s-desc').value = '';
+  document.getElementById('s-cote').value = '';
+  document.getElementById('s-mise').value = '';
+  umi();
+}
+
+// ── Admin: delete pari (match annulé) ──
+async function supprimerPariAdmin(id) {
+  if (!isAdmin) return;
+  const p = paris.find(x => x.id === id);
+  if (!p) return;
+  window._pendingDeleteId = id;
+  document.getElementById('modal-title').textContent = '🚫 Match annulé ?';
+  document.getElementById('modal-body').textContent = `Supprimer le pari de ${gp(p.playerId).name} et rembourser ${p.mise}€ ?`;
+  document.getElementById('modal-box').style.display = 'none';
+  document.getElementById('modal-actions').innerHTML = `
+    <button class="btn btn-primary" onclick="confirmSupprimerPari()">Confirmer</button>
+    <button class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+  `;
+  document.getElementById('modal').classList.add('open');
+}
+
+async function confirmSupprimerPari() {
+  const id = window._pendingDeleteId;
+  if (!id) return;
+  const p = paris.find(x => x.id === id);
+  if (!p) return;
+  await sR.update({['bankrolls.' + p.playerId]: parseFloat((S.bankrolls[p.playerId] + p.mise).toFixed(2))});
+  await pR.doc(id).update({status: 'cancelled'});
+  window._pendingDeleteId = null;
+  closeModal();
+  toast(`Match annulé — ${p.mise}€ remboursés à ${gp(p.playerId).name}`);
+}
+
+// ── Déclarer / modifier pari ──
+async function declarerPari() {
+  const pid = document.getElementById('s-player').value;
+  const desc = document.getElementById('s-desc').value.trim();
+  const cote = parseFloat(document.getElementById('s-cote').value);
+  const is = document.getElementById('s-sanction').checked;
+  const mise = is ? 5 : parseFloat(document.getElementById('s-mise').value);
+  const sId = is ? document.getElementById('s-sanctionner').value : null;
+  const w = document.getElementById('s-warning');
+  const sw = msg => { w.style.display = 'block'; w.textContent = msg; };
+  w.style.display = 'none';
+
+  if (!desc || isNaN(cote) || (isNaN(mise) && !is)) { sw('Merci de remplir tous les champs.'); return; }
+  if (cote <= 1) { sw('La cote doit être > 1.'); return; }
+
+  const br = S.bankrolls[pid], m = mm(br);
+
+  if (editingPariId) {
+    // Modification mode
+    const old = paris.find(x => x.id === editingPariId);
+    if (!old) return;
+    // Recalculate BR: refund old mise, deduct new mise
+    const oldMise = old.mise;
+    const newBr = parseFloat((br + oldMise - mise).toFixed(2));
+    if (mise < m && !is) { sw(`Mise trop faible. Minimum : ${m}€`); return; }
+    if (mise > br + oldMise) { sw('Mise supérieure à la bankroll.'); return; }
+    await sR.update({['bankrolls.' + pid]: newBr});
+    await pR.doc(editingPariId).update({desc, cote, mise});
+    cancelEdit();
+    toast('Pari modifié ✓');
+    return;
+  }
+
+  // New pari
+  if (!is && hn(pid)) { sw(gp(pid).name + ' a déjà un ticket normal aujourd\'hui.'); return; }
+  if (is && hs(pid)) { sw(gp(pid).name + ' a déjà un ticket de sanction aujourd\'hui.'); return; }
+  if (!is && mise < m) { sw(`Mise trop faible. Minimum : ${m}€`); return; }
+  if (mise > br) { sw('Mise supérieure à la bankroll.'); return; }
+
+  await sR.update({['bankrolls.' + pid]: parseFloat((br - mise).toFixed(2))});
+  await pR.add({playerId: pid, desc, cote, mise, isSanction: is, sanctionnerId: sId, status: 'pending', date: TD(), createdAt: firebase.firestore.FieldValue.serverTimestamp()});
+
+  document.getElementById('s-desc').value = '';
+  document.getElementById('s-cote').value = '';
+  document.getElementById('s-mise').value = '';
+  document.getElementById('s-sanction').checked = false;
+  document.getElementById('s-sanctionner-group').style.display = 'none';
+  document.getElementById('s-mise-group').style.opacity = '1';
+  document.getElementById('s-coteinfo').style.display = 'none';
+  w.style.display = 'none';
+  toast('Pari déclaré pour ' + gp(pid).name + ' !');
+}
+
+// ── Résoudre pari ──
+async function resolverPari(id, res) {
+  const p = paris.find(x => x.id === id); if (!p) return;
+  await pR.doc(id).update({status: res});
+  if (p.isSanction) {
+    if (res === 'won') {
+      const gn = parseFloat((p.mise * (p.cote - 1)).toFixed(2));
+      await sR.update({['bankrolls.' + p.playerId]: parseFloat((S.bankrolls[p.playerId] + p.mise).toFixed(2))});
+      if (p.sanctionnerId) {
+        await sR.update({['bankrolls.' + p.sanctionnerId]: parseFloat((S.bankrolls[p.sanctionnerId] + gn).toFixed(2))});
+        toast(`Gagné ! ${gp(p.sanctionnerId).name} encaisse +${gn}€`);
+      }
+    } else toast(`Perdu. ${gp(p.playerId).name} perd 5€.`);
+  } else {
+    if (res === 'won') {
+      const gn = parseFloat((p.mise * (p.cote - 1)).toFixed(2));
+      await sR.update({['bankrolls.' + p.playerId]: parseFloat((S.bankrolls[p.playerId] + p.mise + gn).toFixed(2))});
+      toast(`Gagné ! +${gn}€ net`);
+    } else toast('Perdu.');
+  }
+}
+
+// ── Signaler oubli (admin) ──
+async function signalerOubli() {
+  if (!isAdmin) return;
+  const pid = document.getElementById('s-oubli').value;
+  const player = gp(pid), nc = (S.oublis[pid] || 0) + 1;
+  await sR.update({['oublis.' + pid]: nc});
+  const autres = PL.filter(p => p.id !== pid && !eli(p.id));
+  const tirage = autres[Math.floor(Math.random() * autres.length)];
+  showModal(
+    `Sanction — ${player.name}`,
+    `Oubli n°${nc}. ${tirage.name} est tiré au sort et choisit un pari de 5€ pour ${player.name}.`,
+    `✅ Si gagné : ${player.name} récupère sa mise · ${tirage.name} encaisse les gains nets\n❌ Si perdu : ${player.name} perd 5€ · ${tirage.name} ne perd rien`
+  );
+}
+
+// ── Modal ──
+function showModal(title, body, boxText, actions) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').textContent = body;
+  const box = document.getElementById('modal-box');
+  if (boxText) {
+    box.style.display = 'block';
+    box.innerHTML = boxText.split('\n').map(l => `<div>${l}</div>`).join('');
+  } else box.style.display = 'none';
+
+  const actionsEl = document.getElementById('modal-actions');
+  if (actions) {
+    window._modalActions = actions;
+    actionsEl.innerHTML = actions.map((a, i) =>
+      `<button class="btn ${a.secondary ? 'btn-secondary' : 'btn-primary'}" onclick="window._modalActions[${i}].action()">${a.label}</button>`
+    ).join('');
+  } else {
+    actionsEl.innerHTML = '<button class="btn btn-primary" onclick="closeModal()">OK</button>';
+  }
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+// ── Nav ──
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    const n = ['dashboard', 'paris', 'saisir', 'historique'];
+    t.classList.toggle('active', n[i] === name);
+  });
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'saisir') ps();
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2800);
+}
+
+initIdentity();
+</script>
 </body>
 </html>
