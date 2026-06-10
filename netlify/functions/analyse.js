@@ -14,7 +14,7 @@ exports.handler = async (event) => {
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-opus-4-6',
         max_tokens: 500,
         messages: [{
           role: 'user',
@@ -25,30 +25,42 @@ exports.handler = async (event) => {
             },
             {
               type: 'text',
-              text: `Analyse ce ticket de paris sportifs Winamax et extrait les informations suivantes en JSON uniquement, sans aucun texte avant ou après :
-{
-  "description": "description compacte du pari",
-  "cote": 2.54,
-  "mise": 1.00
-}
-Règles :
-- description : liste les sélections séparées par " + ", pour les combinés MyMatch groupe les sélections du même match avec "/"
-- cote : la cote totale (nombre décimal)
-- mise : le montant misé en euros (nombre décimal, ignorer le ComboBooster)
-Réponds UNIQUEMENT avec le JSON, rien d'autre.`
+              text: 'Analyse ce ticket de paris sportifs Winamax. Reponds UNIQUEMENT avec ce JSON sans aucun texte autour : {"description":"selections separees par +","cote":0.00,"mise":0.00}'
             }
           ]
         }]
       })
     });
 
-    const data = await response.json();
-    const text = data.content?.[0]?.text || '';
+    const raw = await response.text();
+    
+    // Try to parse as JSON
+    let apiData;
+    try {
+      apiData = JSON.parse(raw);
+    } catch(e) {
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: 'API parse error: ' + raw.substring(0, 200) })
+      };
+    }
+
+    // Check for API errors
+    if (apiData.error) {
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: 'API error: ' + apiData.error.message })
+      };
+    }
+
+    const text = apiData.content?.[0]?.text || '';
 
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ result: text })
+      body: JSON.stringify({ result: text, debug: raw.substring(0, 100) })
     };
   } catch (e) {
     return {
