@@ -177,6 +177,10 @@ input:focus,select:focus{border-color:var(--orange)}
       <label class="label" style="margin-top:0">Signaler un oubli</label>
       <select id="s-oubli"></select>
       <button class="btn btn-secondary" onclick="signalerOubli()" style="margin-top:10px">Signaler l'oubli &amp; tirer au sort</button>
+      <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+        <select id="s-reset-oubli" style="flex:1"></select>
+        <button class="btn btn-secondary" onclick="resetOubli()" style="margin-top:0;width:auto;padding:10px 14px;flex-shrink:0;font-size:13px">&#x21BA; Reset oublis</button>
+      </div>
     </div>
 
     <!-- PIN admin login -->
@@ -428,7 +432,7 @@ function rh() {
 }
 
 function ps() {
-  ['s-player', 's-oubli'].forEach(sid => {
+  ['s-player', 's-oubli', 's-reset-oubli'].forEach(sid => {
     const sel = document.getElementById(sid), cur = sel.value;
     sel.innerHTML = '';
     PL.forEach(p => {
@@ -609,6 +613,15 @@ async function resolverPari(id, res) {
 }
 
 // ── Signaler oubli (admin) ──
+async function resetOubli() {
+  if (!isAdmin) return;
+  const pid = document.getElementById('s-reset-oubli').value;
+  if (!pid) return;
+  const player = gp(pid);
+  await sR.update({['oublis.' + pid]: 0});
+  toast(`Oublis de ${player.name} remis à zéro ✓`);
+}
+
 async function signalerOubli() {
   if (!isAdmin) return;
   const pid = document.getElementById('s-oubli').value;
