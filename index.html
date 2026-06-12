@@ -364,21 +364,15 @@ function rp() {
     const sanctionInfo = p.isSanction && p.sanctionnerId
       ? `<div class="pari-sanction-info">Si gagné → ${gp(p.sanctionnerId).name} encaisse +${gn}€ · ${pl.name} récupère 5€</div>` : '';
 
-    // Action buttons
+    // Action buttons - only admins can validate results
     let actions = '';
     if (isAdmin) {
-      // Admin: result + delete (match annulé)
       actions = `<button class="btn-sm btn-win" onclick="resolverPari('${p.id}','won')">✓ Gagné</button>
         <button class="btn-sm btn-lose" onclick="resolverPari('${p.id}','lost')">✗ Perdu</button>
         <button class="btn-sm btn-del" onclick="supprimerPariAdmin('${p.id}')" title="Match annulé">🚫</button>`;
+      if (isOwn) actions = `<button class="btn-sm btn-edit" onclick="editPari('${p.id}')">✏️ Modifier</button>` + actions;
     } else if (isOwn) {
-      // Own: edit + result buttons
-      actions = `<button class="btn-sm btn-edit" onclick="editPari('${p.id}')">✏️ Modifier</button>
-        <button class="btn-sm btn-win" onclick="resolverPari('${p.id}','won')">✓ Gagné</button>
-        <button class="btn-sm btn-lose" onclick="resolverPari('${p.id}','lost')">✗ Perdu</button>`;
-    } else {
-      actions = `<button class="btn-sm btn-win" onclick="resolverPari('${p.id}','won')">✓ Gagné</button>
-        <button class="btn-sm btn-lose" onclick="resolverPari('${p.id}','lost')">✗ Perdu</button>`;
+      actions = `<button class="btn-sm btn-edit" onclick="editPari('${p.id}')">✏️ Modifier</button>`;
     }
 
     h += `<div class="pari-card">
