@@ -693,24 +693,26 @@ function rs() {
     }
   ];
 
-  let h = '<div class="stats-section-title">\ud83d\udcca Classement</div><div class="stats-card"><table class="stats-table"><colgroup><col/><col/><col/><col/><col/></colgroup><thead><tr><th></th>';
-  PL.forEach(p => {
-    h += `<th><div class="stats-av ${p.ac}">${p.av}</div><div>${p.name}</div></th>`;
-  });
-  h += '</tr></thead><tbody>';
+  // Card-based layout — one card per stat row
+  let h = '<div class="stats-section-title">\ud83d\udcca Classement</div>';
 
   rows.forEach(row => {
     const bestVals = PL.map(p => row.best(p.id));
     const bestVal = Math.max(...bestVals);
-    h += `<tr><td>${row.label}</td>`;
+    h += '<div class="stats-row-card">';
+    h += `<div class="stats-row-label">${row.label}</div>`;
+    h += '<div class="stats-row-values">';
     PL.forEach(p => {
       const isBest = row.best(p.id) === bestVal && bestVal > 0;
-      h += `<td class="${isBest ? 'stats-val-best' : ''}">${row.vals(p.id)}</td>`;
+      h += `<div class="stats-player-col">
+        <div class="stats-av ${p.ac}">${p.av}</div>
+        <div class="stats-player-name">${p.name}</div>
+        <div class="stats-player-val ${isBest ? 'stats-val-best' : ''}">${row.vals(p.id)}</div>
+      </div>`;
     });
-    h += '</tr>';
+    h += '</div></div>';
   });
 
-  h += '</tbody></table></div>';
   el.innerHTML = h;
 }
 
