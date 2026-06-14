@@ -666,25 +666,22 @@ function rs() {
       label: 'Bankroll',
       vals: pid => S.bankrolls[pid].toFixed(2) + '\u20ac',
       best: pid => S.bankrolls[pid],
-      higher: true
     },
     {
-      label: 'Paris placés',
+      label: 'Paris plac\xe9s',
       vals: pid => paris.filter(p => p.playerId === pid && !p.isSanction).length,
       best: pid => paris.filter(p => p.playerId === pid && !p.isSanction).length,
-      higher: true
     },
     {
-      label: 'Paris gagnés',
+      label: 'Paris gagn\xe9s',
       vals: pid => done.filter(p => p.playerId === pid && p.status === 'won' && !p.isSanction).length,
       best: pid => done.filter(p => p.playerId === pid && p.status === 'won' && !p.isSanction).length,
-      higher: true
     },
     {
       label: '% victoires',
       vals: pid => {
         const placed = done.filter(p => p.playerId === pid && !p.isSanction).length;
-        if (!placed) return '—';
+        if (!placed) return '\u2014';
         const won = done.filter(p => p.playerId === pid && p.status === 'won' && !p.isSanction).length;
         return Math.round(won / placed * 100) + '%';
       },
@@ -693,19 +690,19 @@ function rs() {
         if (!placed) return -1;
         return done.filter(p => p.playerId === pid && p.status === 'won' && !p.isSanction).length / placed;
       },
-      higher: true
     }
   ];
 
-  // Find best value per row
-  let h = '<table class="stats-table"><thead><tr><th></th>';
-  PL.forEach(p => { h += `<th>${p.name}</th>`; });
+  let h = '<div class="stats-section-title">\ud83d\udcca Classement</div><div class="stats-card"><table class="stats-table"><thead><tr><th></th>';
+  PL.forEach(p => {
+    h += `<th><div class="stats-av ${p.ac}">${p.av}</div><div>${p.name}</div></th>`;
+  });
   h += '</tr></thead><tbody>';
 
   rows.forEach(row => {
-    const vals = PL.map(p => row.best(p.id));
-    const bestVal = row.higher ? Math.max(...vals) : Math.min(...vals);
-    h += `<tr><td class="stats-label">${row.label}</td>`;
+    const bestVals = PL.map(p => row.best(p.id));
+    const bestVal = Math.max(...bestVals);
+    h += `<tr><td>${row.label}</td>`;
     PL.forEach(p => {
       const isBest = row.best(p.id) === bestVal && bestVal > 0;
       h += `<td class="${isBest ? 'stats-val-best' : ''}">${row.vals(p.id)}</td>`;
@@ -713,7 +710,7 @@ function rs() {
     h += '</tr>';
   });
 
-  h += '</tbody></table>';
+  h += '</tbody></table></div>';
   el.innerHTML = h;
 }
 
