@@ -693,7 +693,7 @@ function rs() {
     }
   ];
 
-  let h = '<div class="stats-section-title">\ud83d\udcca Classement</div><div class="stats-card"><table class="stats-table"><thead><tr><th></th>';
+  let h = '<div class="stats-section-title">\ud83d\udcca Classement</div><div class="stats-card"><table class="stats-table"><colgroup><col/><col/><col/><col/><col/></colgroup><thead><tr><th></th>';
   PL.forEach(p => {
     h += `<th><div class="stats-av ${p.ac}">${p.av}</div><div>${p.name}</div></th>`;
   });
