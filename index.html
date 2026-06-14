@@ -124,6 +124,7 @@ input:focus,select:focus{border-color:var(--orange)}
   <button class="tab" onclick="switchTab('paris')"><i class="ti ti-ticket"></i>Paris</button>
   <button class="tab" onclick="switchTab('saisir')"><i class="ti ti-plus"></i>Saisir</button>
   <button class="tab" onclick="switchTab('historique')"><i class="ti ti-history"></i>Historique</button>
+  <button class="tab" onclick="switchTab('stats')"><i class="ti ti-chart-bar"></i>Stats</button>
 </div>
 <div class="content">
 
@@ -193,6 +194,7 @@ input:focus,select:focus{border-color:var(--orange)}
   </div>
 
   <div id="tab-historique" class="section"><div id="historiqueList"></div></div>
+  <div id="tab-stats" class="section"><div id="statsList"></div></div>
 </div>
 </div>
 
@@ -654,14 +656,76 @@ function showModal(title, body, boxText, actions) {
 function closeModal() { document.getElementById('modal').classList.remove('open'); }
 
 // ── Nav ──
+function rs() {
+  if (!document.getElementById('tab-stats').classList.contains('active')) return;
+  const el = document.getElementById('statsList');
+  const done = paris.filter(p => p.status !== 'pending' && p.status !== 'cancelled');
+
+  const rows = [
+    {
+      label: 'Bankroll',
+      vals: pid => S.bankrolls[pid].toFixed(2) + '\u20ac',
+      best: pid => S.bankrolls[pid],
+      higher: true
+    },
+    {
+      label: 'Paris placés',
+      vals: pid => paris.filter(p => p.playerId === pid && !p.isSanction).length,
+      best: pid => paris.filter(p => p.playerId === pid && !p.isSanction).length,
+      higher: true
+    },
+    {
+      label: 'Paris gagnés',
+      vals: pid => done.filter(p => p.playerId === pid && p.status === 'won' && !p.isSanction).length,
+      best: pid => done.filter(p => p.playerId === pid && p.status === 'won' && !p.isSanction).length,
+      higher: true
+    },
+    {
+      label: '% victoires',
+      vals: pid => {
+        const placed = done.filter(p => p.playerId === pid && !p.isSanction).length;
+        if (!placed) return '—';
+        const won = done.filter(p => p.playerId === pid && p.status === 'won' && !p.isSanction).length;
+        return Math.round(won / placed * 100) + '%';
+      },
+      best: pid => {
+        const placed = done.filter(p => p.playerId === pid && !p.isSanction).length;
+        if (!placed) return -1;
+        return done.filter(p => p.playerId === pid && p.status === 'won' && !p.isSanction).length / placed;
+      },
+      higher: true
+    }
+  ];
+
+  // Find best value per row
+  let h = '<table class="stats-table"><thead><tr><th></th>';
+  PL.forEach(p => { h += `<th>${p.name}</th>`; });
+  h += '</tr></thead><tbody>';
+
+  rows.forEach(row => {
+    const vals = PL.map(p => row.best(p.id));
+    const bestVal = row.higher ? Math.max(...vals) : Math.min(...vals);
+    h += `<tr><td class="stats-label">${row.label}</td>`;
+    PL.forEach(p => {
+      const isBest = row.best(p.id) === bestVal && bestVal > 0;
+      h += `<td class="${isBest ? 'stats-val-best' : ''}">${row.vals(p.id)}</td>`;
+    });
+    h += '</tr>';
+  });
+
+  h += '</tbody></table>';
+  el.innerHTML = h;
+}
+
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach((t, i) => {
-    const n = ['dashboard', 'paris', 'saisir', 'historique'];
+    const n = ['dashboard', 'paris', 'saisir', 'historique', 'stats'];
     t.classList.toggle('active', n[i] === name);
   });
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   if (name === 'saisir') ps();
+  if (name === 'stats') rs();
 }
 
 function toast(msg) {
