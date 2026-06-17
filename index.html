@@ -550,6 +550,13 @@ async function declarerPari() {
 
   const br = S.bankrolls[pid], m = mm(br);
 
+  // Block if player has a pending sanction to fill
+  if (!is && S.sanctions && S.sanctions[pid]) {
+    const sanctionnerName = gp(S.sanctions[pid])?.name || '?';
+    sw(`${gp(pid).name}, tu dois d'abord accepter ton ch\xe2timent et remplir le ticket de p\xe9nalit\xe9 de ${sanctionnerName}.`);
+    return;
+  }
+
   if (editingPariId) {
     // Modification mode
     const old = paris.find(x => x.id === editingPariId);
@@ -572,7 +579,9 @@ async function declarerPari() {
   if (!is && mise < m) { sw(`Mise trop faible. Minimum : ${m}€`); return; }
   if (mise > br) { sw('Mise supérieure à la bankroll.'); return; }
 
-  await sR.update({['bankrolls.' + pid]: parseFloat((br - mise).toFixed(2))});
+  const stateUpdate = {['bankrolls.' + pid]: parseFloat((br - mise).toFixed(2))};
+  if (is) stateUpdate['sanctions.' + pid] = firebase.firestore.FieldValue.delete();
+  await sR.update(stateUpdate);
   await pR.add({playerId: pid, desc, cote, mise, isSanction: is, sanctionnerId: sId, status: 'pending', date: TD(), createdAt: firebase.firestore.FieldValue.serverTimestamp()});
 
   document.getElementById('s-desc').value = '';
@@ -622,9 +631,12 @@ async function signalerOubli() {
   if (!isAdmin) return;
   const pid = document.getElementById('s-oubli').value;
   const player = gp(pid), nc = (S.oublis[pid] || 0) + 1;
-  await sR.update({['oublis.' + pid]: nc});
   const autres = PL.filter(p => p.id !== pid && !eli(p.id));
   const tirage = autres[Math.floor(Math.random() * autres.length)];
+  await sR.update({
+    ['oublis.' + pid]: nc,
+    ['sanctions.' + pid]: tirage.id
+  });
   showModal(
     `Sanction — ${player.name}`,
     `Oubli n°${nc}. ${tirage.name} est tiré au sort et choisit un pari de 5€ pour ${player.name}.`,
