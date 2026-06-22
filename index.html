@@ -448,7 +448,7 @@ function umi() {
   const pid = document.getElementById('s-player').value;
   if (!pid) return;
   const br = S.bankrolls[pid];
-  document.getElementById('s-miseinfo').textContent = `BR : ${br.toFixed(2)}€ — mise min : ${mm(br)}€`;
+  document.getElementById('s-miseinfo').textContent = `BR : ${br.toFixed(2)}€`;
   const is = document.getElementById('s-sanction').checked, ab = document.getElementById('s-alreadybet');
   if (hn(pid) && !is) { ab.style.display = 'block'; ab.textContent = gp(pid).name + ' a déjà son ticket du jour.'; }
   else ab.style.display = 'none';
@@ -576,7 +576,7 @@ async function declarerPari() {
   // New pari
   if (!is && hn(pid)) { sw(gp(pid).name + ' a déjà un ticket normal aujourd\'hui.'); return; }
   if (is && hs(pid)) { sw(gp(pid).name + ' a déjà un ticket de sanction aujourd\'hui.'); return; }
-  if (!is && mise < m) { sw(`Mise trop faible. Minimum : ${m}€`); return; }
+  // No minimum mise rule
   if (mise > br) { sw('Mise supérieure à la bankroll.'); return; }
 
   const stateUpdate = {['bankrolls.' + pid]: parseFloat((br - mise).toFixed(2))};
