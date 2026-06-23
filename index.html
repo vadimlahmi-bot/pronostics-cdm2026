@@ -564,7 +564,6 @@ async function declarerPari() {
     // Recalculate BR: refund old mise, deduct new mise
     const oldMise = old.mise;
     const newBr = parseFloat((br + oldMise - mise).toFixed(2));
-    if (mise < m && !is) { sw(`Mise trop faible. Minimum : ${m}€`); return; }
     if (mise > br + oldMise) { sw('Mise supérieure à la bankroll.'); return; }
     await sR.update({['bankrolls.' + pid]: newBr});
     await pR.doc(editingPariId).update({desc, cote, mise});
